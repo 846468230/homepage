@@ -1,7 +1,7 @@
 from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
-
+from homepage.settings import MEDIA_ROOT
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     chinese_name = models.CharField(max_length=128,default='',verbose_name="中文名")
@@ -17,10 +17,25 @@ class UserProfile(models.Model):
         verbose_name = verbose_name_plural = "用户信息"
     def __str__(self):
         return self.user.username
-    """@classmethod
-    def author(self):
-        return UserProfile.objects.get(isauthor=True)
 
+    def exp(self,id):
+        return experience.objects.filter(owner=self.user)
+    
+    def education(self,id):
+        return eduction.objects.filter(owner=self.user)
+    
+    def skills(self,id):
+        return skills.objects.filter(owner=self.user)
+    
+    def interests(self,id):
+        return interests.objects.filter(owner=self.user)
+
+    def awards(self,id):
+        return awards.objects.filter(owner=self.user)
+    
+    def app(self,id):
+        return app.objects.filter(status=app.STATUS_NORMAL).get(owner=self.user)
+    """
     def info(self):
         return Honor.objects.filter(owner_id=self.id).filter(status=Honor.STATUS_NORMAL).get(info_catogory=Honor.STATUS_INFO)
 
@@ -135,11 +150,14 @@ class app(models.Model):
     )
     content = models.CharField(max_length=200,verbose_name="APP介绍")
     image = models.ImageField(upload_to='photos/%Y/%m/%d/',default='',verbose_name="App图片")
-    android_url = models.URLField(max_length=300,blank=True,null=True,default='',verbose_name="安卓下载地址")
+    android_url = models.FileField(upload_to='photos/%Y/%m/%d/',default='',verbose_name="安卓下载地址")
     ios_url = models.URLField(max_length=300,blank=True,null=True,default='',verbose_name="苹果下载地址")
     status = models.PositiveIntegerField(default=STATUS_NORMAL,choices=STATUS_ITEMS,verbose_name="状态")
     owner = models.ForeignKey(User,verbose_name="app属主",on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True,verbose_name="创建时间")
+    
+    def features(self,id):
+        return feature.objects.filter(status=feature.STATUS_NORMAL).filter(owner=self)
 
     def __str__(self):
         return self.content+self.owner.username
