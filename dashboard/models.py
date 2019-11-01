@@ -19,19 +19,19 @@ class UserProfile(models.Model):
         return self.user.username
 
     def exp(self,id):
-        return experience.objects.filter(owner=self.user)
+        return experience.objects.filter(status=experience.STATUS_NORMAL).filter(owner=self.user)
     
     def education(self,id):
-        return eduction.objects.filter(owner=self.user)
+        return eduction.objects.filter(status=eduction.STATUS_NORMAL).filter(owner=self.user)
     
     def skills(self,id):
-        return skills.objects.filter(owner=self.user)
+        return skills.objects.filter(status=skills.STATUS_NORMAL).filter(owner=self.user)
     
     def interests(self,id):
-        return interests.objects.filter(owner=self.user)
+        return interests.objects.filter(status=interests.STATUS_NORMAL).filter(owner=self.user)
 
     def awards(self,id):
-        return awards.objects.filter(owner=self.user)
+        return awards.objects.filter(status=awards.STATUS_NORMAL).filter(owner=self.user)
     
     def app(self,id):
         return app.objects.filter(status=app.STATUS_NORMAL).get(owner=self.user)
